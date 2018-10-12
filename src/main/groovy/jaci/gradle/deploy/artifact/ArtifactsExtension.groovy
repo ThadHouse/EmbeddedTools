@@ -6,12 +6,15 @@ import org.gradle.api.Project
 import org.gradle.api.internal.DefaultNamedDomainObjectSet
 import org.gradle.internal.reflect.DirectInstantiator
 
+import javax.inject.Inject
+
 // DefaultNamedDomainObjectSet applies the withType, matching, all and other methods
 // that are incredibly useful
 @CompileStatic
 class ArtifactsExtension extends DefaultNamedDomainObjectSet<Artifact> implements Resolver<Artifact> {
     final Project project
 
+    @Inject
     ArtifactsExtension(Project project) {
         super(Artifact.class, DirectInstantiator.INSTANCE)
         this.project = project

@@ -6,11 +6,14 @@ import org.gradle.api.Project
 import org.gradle.api.internal.DefaultNamedDomainObjectSet
 import org.gradle.internal.reflect.DirectInstantiator
 
+import javax.inject.Inject
+
 @CompileStatic
 class CacheExtension extends DefaultNamedDomainObjectSet<CacheMethod> implements Resolver<CacheMethod> {
 
     final Project project
 
+    @Inject
     CacheExtension(Project project) {
         super(CacheMethod.class, DirectInstantiator.INSTANCE)
         this.project = project
