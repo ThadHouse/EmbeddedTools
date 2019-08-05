@@ -7,12 +7,15 @@ import org.gradle.api.Project
 import org.gradle.api.internal.DefaultNamedDomainObjectSet
 import org.gradle.internal.reflect.DirectInstantiator
 
+import javax.inject.Inject
+
 // DefaultNamedDomainObjectSet applies the withType, matching, all and other methods
 // that are incredibly useful
 @CompileStatic
 class TargetsExtension extends DefaultNamedDomainObjectSet<RemoteTarget> implements Resolver<RemoteTarget> {
     final Project project
 
+    @Inject
     TargetsExtension(Project project) {
         super(RemoteTarget, DirectInstantiator.INSTANCE)
         this.project = project

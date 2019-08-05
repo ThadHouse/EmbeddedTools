@@ -12,7 +12,6 @@ import org.gradle.api.DomainObjectCollection
 import org.gradle.api.Named
 import org.gradle.api.Project
 import java.util.function.Function
-import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.tasks.TaskCollection
 
 import javax.inject.Inject

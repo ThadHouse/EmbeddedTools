@@ -15,7 +15,7 @@ import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectCollection
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.TaskCollection
 
 import javax.inject.Inject
@@ -30,11 +30,11 @@ class DeployExtension {
     Project project
 
     @Inject
-    DeployExtension(Project project) {
+    DeployExtension(Project project, ObjectFactory objects) {
         this.project = project
-        targets = ((ExtensionAware)this).extensions.create('targets', TargetsExtension, project)
-        artifacts = ((ExtensionAware)this).extensions.create('artifacts', ArtifactsExtension, project)
-        cache = ((ExtensionAware)this).extensions.create('cache', CacheExtension, project)
+        targets = objects.newInstance(TargetsExtension, project)
+        artifacts = objects.newInstance(ArtifactsExtension, project)
+        cache = objects.newInstance(CacheExtension, project)
 
         this.targets.all { RemoteTarget target ->
             project.tasks.register("discover${target.name.capitalize()}".toString(), TargetDiscoveryTask) { TargetDiscoveryTask task ->
