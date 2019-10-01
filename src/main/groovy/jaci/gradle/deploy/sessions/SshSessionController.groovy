@@ -64,6 +64,12 @@ class SshSessionController extends AbstractSessionController implements IPSessio
         sftp.connect()
         try {
             files.each { String dst, File src ->
+                try {
+                    def mkdir = new File(dst).parentFile.toString().replace('\\', '/')
+                    sftp.mkdir(mkdir)
+                } catch (Exception ex) {
+                    // Do nothing on catch
+                }
                 sftp.put(src.absolutePath, dst)
             }
         } finally {
