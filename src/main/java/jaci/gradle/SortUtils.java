@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class SortUtils {
     public static class TopoMember<T> {
+        @SuppressWarnings("unchecked")
         public TopoMember(Map<String, Object> constructionMap) {
             if (constructionMap.containsKey("name")) {
                 name = (String)constructionMap.get("name");
