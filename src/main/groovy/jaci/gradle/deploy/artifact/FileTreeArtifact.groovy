@@ -11,6 +11,8 @@ import org.gradle.api.provider.Property
 
 import javax.inject.Inject
 
+
+
 @CompileStatic
 class FileTreeArtifact extends AbstractArtifact implements CacheableArtifact {
 

@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
+import org.gradle.api.internal.CollectionCallbackActionDecorator;
 import org.gradle.api.internal.DefaultDomainObjectSet;
 
 import jaci.gradle.deploy.target.RemoteTarget;
@@ -14,7 +15,7 @@ public class DeployLocationSet extends DefaultDomainObjectSet<DeployLocation> {
 
     @Inject
     public DeployLocationSet(Project project, RemoteTarget target) {
-        super(DeployLocation.class);
+        super(DeployLocation.class, CollectionCallbackActionDecorator.NOOP);
         this.target = target;
         this.project = project;
     }

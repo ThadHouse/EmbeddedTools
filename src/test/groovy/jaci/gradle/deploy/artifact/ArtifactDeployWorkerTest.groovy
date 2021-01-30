@@ -20,7 +20,7 @@ class ArtifactDeployWorkerTest extends Specification {
     }
 
     def "runs deploy enabled"() {
-        def worker = new ArtifactDeployWorker(context, enabledArtifact)
+        def worker = new ArtifactDeployWorkerWrapper(context, enabledArtifact)
 
         when:
         worker.run()
@@ -32,7 +32,7 @@ class ArtifactDeployWorkerTest extends Specification {
     }
 
     def "runs skipped disabled"() {
-        def worker = new ArtifactDeployWorker(context, disabledArtifact)
+        def worker = new ArtifactDeployWorkerWrapper(context, disabledArtifact)
 
         when:
         worker.run()
@@ -53,7 +53,7 @@ class ArtifactDeployWorkerTest extends Specification {
         // Check that, after construction, it is removed from that map
         // and its attributes match
         when:
-        def worker = new ArtifactDeployWorker(hc)
+        def worker = new ArtifactDeployWorkerWrapper(hc)
         then:
         ArtifactDeployWorker.storageCount() == 0
         worker.ctx == context
