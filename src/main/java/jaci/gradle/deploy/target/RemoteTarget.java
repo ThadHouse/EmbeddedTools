@@ -25,7 +25,7 @@ public class RemoteTarget implements Named {
     public RemoteTarget(String name, Project project) {
         this.name = name;
         this.project = project;
-        // this.dry = EmbeddedTools.isDryRun(project);
+        this.dry = project.hasProperty("deploy-dry");
         locations = project.getObjects().newInstance(DeployLocationSet.class, project, this);
         log = Logger.getLogger(toString());
     }

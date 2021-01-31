@@ -64,7 +64,10 @@ public abstract class TargetDiscoveryWorker implements WorkAction<TargetDiscover
         DiscoveryStorage lStorage = storage.remove(getParameters().getIndex().get());
         Consumer<DeployContext> callback = lStorage.contextSet;
         RemoteTarget target = lStorage.target;
+        run(callback, target);
+    }
 
+    public void run(Consumer<DeployContext> callback, RemoteTarget target) {
         log = ETLoggerFactory.INSTANCE.create(this.getClass().getSimpleName() +"[" + target.getName() + "]");
 
         DeployLocationSet locSet = target.getLocations();

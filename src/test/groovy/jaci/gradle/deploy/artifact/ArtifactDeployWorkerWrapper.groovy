@@ -12,7 +12,6 @@ class ArtifactDeployWorkerWrapper extends ArtifactDeployWorker {
         }
 
         Property<Integer> getIndex() {
-            println(provider)
             return provider
         }
     }

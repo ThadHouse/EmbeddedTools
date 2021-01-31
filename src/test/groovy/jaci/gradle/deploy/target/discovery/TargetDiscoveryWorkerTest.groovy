@@ -9,6 +9,7 @@ import jaci.gradle.deploy.target.location.DeployLocation
 import jaci.gradle.deploy.target.location.DeployLocationSet
 import org.gradle.api.internal.DefaultDomainObjectSet
 import org.gradle.testfixtures.ProjectBuilder
+import org.gradle.api.provider.Property
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -31,7 +32,7 @@ class TargetDiscoveryWorkerTest extends Specification {
         target.getLocations().add(new MockedLocation(target, context, true))
 
         when:
-        worker.run()
+        worker.run(callback, target)
         then:
         1 * callback.accept(context)
         0 * callback.accept(null)
@@ -41,7 +42,7 @@ class TargetDiscoveryWorkerTest extends Specification {
         target.getLocations().add(new MockedLocation(target, context, false))
 
         when:
-        worker.run()
+        worker.run(callback, target)
         then:
         1 * callback.accept(null)
         0 * callback.accept(_)
@@ -53,7 +54,7 @@ class TargetDiscoveryWorkerTest extends Specification {
 
         // Should say we found the target
         when:
-        worker.run()
+        worker.run(callback, target)
         then:
         1 * callback.accept(context)
         0 * callback.accept(null)
@@ -64,7 +65,7 @@ class TargetDiscoveryWorkerTest extends Specification {
         target.getLocations().add(new MockedLocation(target, context, true))
 
         when:
-        worker.run()
+        worker.run(callback, target)
         then:
         1 * callback.accept(context)
         0 * callback.accept(null)
@@ -75,7 +76,7 @@ class TargetDiscoveryWorkerTest extends Specification {
         target.getLocations().add(new MockedLocation(target, context, false))
 
         when:
-        worker.run()
+        worker.run(callback, target)
         then:
         1 * callback.accept(null)
         0 * callback.accept(_)
@@ -93,11 +94,13 @@ class TargetDiscoveryWorkerTest extends Specification {
         // Check that, after construction, it is removed from that map
         // and its attributes match
         when:
-        def worker = new TargetDiscoveryWorkerWrapper()
+        def property = Stub(Property) {
+            get() >> hc
+        }
+        def worker = new TargetDiscoveryWorkerWrapper(property)
+        worker.execute()
         then:
         TargetDiscoveryWorker.storageCount() == 0
-        worker.target == target
-        worker.callback == callback
     }
 
     static class MockedLocation extends AbstractDeployLocation {

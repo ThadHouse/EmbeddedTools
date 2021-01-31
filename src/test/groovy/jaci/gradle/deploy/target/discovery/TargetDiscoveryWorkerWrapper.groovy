@@ -7,8 +7,8 @@ class TargetDiscoveryWorkerWrapper extends TargetDiscoveryWorker {
     private static class TargetDiscoveryWorkerParametersMock implements TargetDiscoveryWorkerParameters {
         private Property<Integer> provider;
 
-        public TargetDiscoveryWorkerParametersMock(Integer index) {
-            provider = Mock(Property)
+        public TargetDiscoveryWorkerParametersMock(Property<Integer> index) {
+            provider = index
         }
 
         Property<Integer> getIndex() {
@@ -22,7 +22,7 @@ class TargetDiscoveryWorkerWrapper extends TargetDiscoveryWorker {
 
     }
 
-    TargetDiscoveryWorkerWrapper(Integer index) {
+    TargetDiscoveryWorkerWrapper(Property<Integer> index) {
         parameters = new TargetDiscoveryWorkerParametersMock(index)
     }
 

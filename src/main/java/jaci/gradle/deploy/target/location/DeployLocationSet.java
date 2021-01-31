@@ -24,13 +24,14 @@ public class DeployLocationSet extends DefaultDomainObjectSet<DeployLocation> {
         T location = project.getObjects().newInstance(type, target);
 
         if (target.isDry()) {
-            //location = new DryDeployLocation(location);
+            DeployLocation dl = new DryDeployLocation(location);
+            this.add(dl);
+            return dl;
         } else {
             config.execute(location);
+            this.add(location);
+            return location;
         }
-
-        this.add(location);
-        return location;
     }
 
     public DeployLocation ssh(final Action<SshDeployLocation> config) {
