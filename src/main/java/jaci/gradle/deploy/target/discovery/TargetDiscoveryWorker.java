@@ -3,7 +3,6 @@ package jaci.gradle.deploy.target.discovery;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,10 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-
 import org.gradle.workers.WorkAction;
-import org.gradle.workers.WorkParameters;
 
 import jaci.gradle.deploy.context.DeployContext;
 import jaci.gradle.deploy.target.RemoteTarget;
@@ -29,12 +25,7 @@ import jaci.gradle.deploy.target.location.DeployLocationSet;
 import jaci.gradle.log.ETLogger;
 import jaci.gradle.log.ETLoggerFactory;
 
-public abstract class TargetDiscoveryWorker implements WorkAction<TargetDiscoveryWorker.IntParameter> {
-
-    public interface IntParameter extends WorkParameters {
-        void setValue(int value);
-        int getValue();
-    }
+public abstract class TargetDiscoveryWorker implements WorkAction<TargetDiscoveryWorkerParameters> {
 
     private static class DiscoveryStorage {
         public final RemoteTarget target;
@@ -47,15 +38,19 @@ public abstract class TargetDiscoveryWorker implements WorkAction<TargetDiscover
     }
 
     private static Map<Integer, DiscoveryStorage> storage = new HashMap<>();
+    private static int storageIndex = 0;
 
     public static void clearStorage() {
         storage.clear();
+        storageIndex++;
     }
 
     public static int submitStorage(RemoteTarget target, Consumer<DeployContext> cb) {
-        int hashcode = target.hashCode();
-        storage.put(hashcode, new DiscoveryStorage(target, cb));
-        return hashcode;
+        DiscoveryStorage stg = new DiscoveryStorage(target, cb);
+        int currentIndex = storageIndex;
+        storageIndex++;
+        storage.put(currentIndex, stg);
+        return currentIndex;
     }
 
     public static int storageCount() {
@@ -66,7 +61,7 @@ public abstract class TargetDiscoveryWorker implements WorkAction<TargetDiscover
 
     @Override
     public void execute() {
-        DiscoveryStorage lStorage = storage.remove(getParameters().getValue());
+        DiscoveryStorage lStorage = storage.remove(getParameters().getIndex().get());
         Consumer<DeployContext> callback = lStorage.contextSet;
         RemoteTarget target = lStorage.target;
 

@@ -2,6 +2,7 @@ package jaci.gradle.deploy.artifact
 
 import jaci.gradle.deploy.context.DeployContext
 import jaci.gradle.log.ETLogger
+import org.gradle.api.provider.Property
 import spock.lang.Specification
 
 class ArtifactDeployWorkerTest extends Specification {
@@ -20,10 +21,10 @@ class ArtifactDeployWorkerTest extends Specification {
     }
 
     def "runs deploy enabled"() {
-        def worker = new ArtifactDeployWorkerWrapper(context, enabledArtifact)
+        def worker = new ArtifactDeployWorkerWrapper()
 
         when:
-        worker.run()
+        worker.run(context, enabledArtifact)
 
         // We should only call runDeploy with the correct subcontext
         then:
@@ -32,10 +33,10 @@ class ArtifactDeployWorkerTest extends Specification {
     }
 
     def "runs skipped disabled"() {
-        def worker = new ArtifactDeployWorkerWrapper(context, disabledArtifact)
+        def worker = new ArtifactDeployWorkerWrapper()
 
         when:
-        worker.run()
+        worker.run(context, disabledArtifact)
 
         then:
         0 * disabledArtifact.deploy(_)
@@ -45,19 +46,22 @@ class ArtifactDeployWorkerTest extends Specification {
         ArtifactDeployWorker.clearStorage()
 
         // Check that it gets inserted
+        def hc = 0
         when:
-        def hc = ArtifactDeployWorker.submitStorage(context, enabledArtifact)
+        hc = ArtifactDeployWorker.submitStorage(context, enabledArtifact)
         then:
         ArtifactDeployWorker.storageCount() == 1
 
         // Check that, after construction, it is removed from that map
         // and its attributes match
         when:
-        def worker = new ArtifactDeployWorkerWrapper(hc)
+        def property = Stub(Property) {
+            get() >> hc
+        }
+        def worker = new ArtifactDeployWorkerWrapper(property)
+        worker.execute()
         then:
         ArtifactDeployWorker.storageCount() == 0
-        worker.ctx == context
-        worker.artifact == enabledArtifact
     }
 
 }

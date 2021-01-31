@@ -25,7 +25,7 @@ class TargetDiscoveryWorkerTest extends Specification {
     def context = Mock(DeployContext)
 
     @Subject
-    def worker = new TargetDiscoveryWorker(target, callback)
+    def worker = new TargetDiscoveryWorkerWrapper()
 
     def "single success"() {
         target.getLocations().add(new MockedLocation(target, context, true))
@@ -93,7 +93,7 @@ class TargetDiscoveryWorkerTest extends Specification {
         // Check that, after construction, it is removed from that map
         // and its attributes match
         when:
-        def worker = new TargetDiscoveryWorker(hc)
+        def worker = new TargetDiscoveryWorkerWrapper()
         then:
         TargetDiscoveryWorker.storageCount() == 0
         worker.target == target

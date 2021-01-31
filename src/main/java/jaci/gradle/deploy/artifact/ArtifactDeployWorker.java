@@ -38,8 +38,8 @@ public abstract class ArtifactDeployWorker implements WorkAction<ArtifactDeployP
     @Override
     public void execute() {
         Integer index = getParameters().getIndex().get();
-        DeployStorage storage = deployerStorage.get(index);
-        deployerStorage.remove(index);
+        DeployStorage storage = deployerStorage.remove(index);
+
         DeployContext rootContext = storage.context;
         Artifact artifact = storage.artifact;
         run(rootContext, artifact);

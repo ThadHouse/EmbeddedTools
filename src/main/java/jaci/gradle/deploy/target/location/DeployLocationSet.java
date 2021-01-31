@@ -33,8 +33,7 @@ public class DeployLocationSet extends DefaultDomainObjectSet<DeployLocation> {
         return location;
     }
 
-    public DeployLocation ssh(final Action<? extends DeployLocation> config) {
-        return null;
-        //return location(SshDeployLocation, config);
+    public DeployLocation ssh(final Action<SshDeployLocation> config) {
+        return location(SshDeployLocation.class, config);
     }
 }

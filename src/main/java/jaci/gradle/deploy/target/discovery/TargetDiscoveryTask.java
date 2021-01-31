@@ -73,7 +73,7 @@ public class TargetDiscoveryTask extends DefaultTask implements Consumer<DeployC
         // our own timeout logic.
         log.debug("Submitting worker ${hashcode}...");
         workerExecutor.noIsolation().submit(TargetDiscoveryWorker.class, config -> {
-            config.setValue(hashcode);
+            config.getIndex().set(hashcode);
         });
         log.debug("Submitted!");
     }
